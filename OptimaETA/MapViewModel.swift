@@ -9,10 +9,11 @@ import SwiftUI
 import MapKit
 
 @Observable class MapViewModel {
-    var searchString: String = ""
+    var searchString = ""
     var searchResults: [MKMapItem] = []
     var position: MapCameraPosition = .userLocation(fallback: .region(ATX.region))
- 
+    
+    var isSearching: Bool { !searchString.isEmpty }
     
     func search(for query: String) async {
         let request = MKLocalSearch.Request()
@@ -25,6 +26,10 @@ import MapKit
         let search = MKLocalSearch(request: request)
         let response = try? await search.start()
         searchResults = response?.mapItems ?? []
+    }
+    
+    func clearSearchString() {
+        searchString = ""
     }
 }
 

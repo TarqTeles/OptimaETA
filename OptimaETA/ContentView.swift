@@ -16,7 +16,7 @@ struct ContentView: View {
             
         }
         .mapStyle(.standard(elevation: .realistic, showsTraffic: true))
-            
+        .safeAreaInset(edge: .bottom, content: { SearchView(vm: vm).padding(.horizontal) })
     }
 }
 
