@@ -9,13 +9,17 @@ import SwiftUI
 import MapKit
 
 struct ContentView: View {
+    let vm: MapViewModel
+    
     var body: some View {
-        Map {
+        Map(initialPosition: vm.position) {
             
         }
+        .mapStyle(.standard(elevation: .realistic, showsTraffic: true))
+            
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(vm: MapViewModel())
 }

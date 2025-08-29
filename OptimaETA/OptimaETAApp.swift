@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct OptimaETAApp: App {
+    let myVM = MapViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(vm: myVM)
         }
     }
 }
