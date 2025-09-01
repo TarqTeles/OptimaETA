@@ -6,14 +6,21 @@
 //
 
 import SwiftUI
+import MapKit
 
 @main
 struct OptimaETAApp: App {
     let myVM = MapViewModel()
+    let lm = CLLocationManager()
     
     var body: some Scene {
         WindowGroup {
             ContentView(vm: myVM)
+                .onAppear {
+                    if lm.authorizationStatus != .authorizedWhenInUse {
+                        lm.requestWhenInUseAuthorization()
+                    }
+                }
         }
     }
 }

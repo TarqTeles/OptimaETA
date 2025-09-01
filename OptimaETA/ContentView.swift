@@ -13,10 +13,14 @@ struct ContentView: View {
     
     var body: some View {
         Map(initialPosition: vm.position, selection: $vm.selection) {
+            UserAnnotation()
             ForEach(vm.searchResults, id: \.self) { result in
                 Marker(item: result)
                     .mapItemDetailSelectionAccessory(.callout(.compact))
             }
+        }
+        .mapControls {
+            MapUserLocationButton()
         }
         .mapStyle(.standard(elevation: .realistic, showsTraffic: true))
         .safeAreaInset(edge: .bottom, content: { SearchView(vm: vm).padding(.horizontal) })
