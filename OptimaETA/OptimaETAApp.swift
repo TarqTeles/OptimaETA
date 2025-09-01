@@ -15,7 +15,7 @@ struct OptimaETAApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(vm: myVM)
+            ContentView(vm: myVM, lm: lm)
                 .onAppear {
                     if lm.authorizationStatus != .authorizedWhenInUse {
                         lm.requestWhenInUseAuthorization()

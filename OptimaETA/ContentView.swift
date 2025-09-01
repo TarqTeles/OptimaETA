@@ -10,6 +10,7 @@ import MapKit
 
 struct ContentView: View {
     @Bindable var vm: MapViewModel
+    var lm: CLLocationManager = CLLocationManager()
     
     var body: some View {
         Map(initialPosition: vm.position, selection: $vm.selection) {
