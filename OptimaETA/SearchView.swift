@@ -12,20 +12,25 @@ struct SearchView: View {
     
     var body: some View {
         TextField(text: $vm.searchString, label: { Label("Place of interest", image: "magnifyingglass") })
+            .textContentType(.location)
             .padding(.all)
             .foregroundStyle(.primary)
             .padding(.horizontal)
             .background(content: { RoundedRectangle(cornerRadius: 24).foregroundStyle(.thickMaterial) })
             .overlay {
-                HStack {
-                    Spacer()
-                    Button(action: vm.clearSearchString, label: {
-                        Image(systemName: vm.isSearching ? "xmark.circle.fill" : "magnifyingglass")
-                    })
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal)
-                }
+                ExtractedView
             }
+    }
+    
+    private var ExtractedView: some View {
+        HStack {
+            Spacer()
+            Button(action: vm.clearSearchString, label: {
+                Image(systemName: vm.isSearching ? "xmark.circle.fill" : "magnifyingglass")
+            })
+            .foregroundStyle(.secondary)
+            .padding(.horizontal)
+        }
     }
 }
 
@@ -33,3 +38,4 @@ struct SearchView: View {
     SearchView(vm: MapViewModel())
         .frame(width: 400, height: 100)
 }
+
