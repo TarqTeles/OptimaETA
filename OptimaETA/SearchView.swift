@@ -11,7 +11,7 @@ struct SearchView: View {
     @Bindable var vm: MapViewModel
     
     var body: some View {
-        TextField(text: $vm.searchString, label: { Label("Place of interest", image: "magnifyingglass") })
+        TextField(text: $vm.searchString, label: { Label("Place of interest", systemImage: "magnifyingglass") })
             .textContentType(.location)
             .padding(.all)
             .foregroundStyle(.primary)
@@ -35,6 +35,8 @@ struct SearchView: View {
 }
 
 #Preview {
+    @Previewable let vm = MapViewModel()
+
     SearchView(vm: MapViewModel())
         .frame(width: 400, height: 100)
 }

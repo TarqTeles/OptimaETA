@@ -9,12 +9,13 @@ import SwiftUI
 import MapKit
 
 struct ContentView: View {
-    let vm: MapViewModel
+    @Bindable var vm: MapViewModel
     
     var body: some View {
-        Map(initialPosition: vm.position) {
+        Map(initialPosition: vm.position, selection: $vm.selection) {
             ForEach(vm.searchResults, id: \.self) { result in
                 Marker(item: result)
+                    .mapItemDetailSelectionAccessory(.callout(.compact))
             }
         }
         .mapStyle(.standard(elevation: .realistic, showsTraffic: true))
@@ -23,5 +24,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(vm: MapViewModel())
+    @Previewable let vm = MapViewModel()
+    
+    ContentView(vm: vm)
 }

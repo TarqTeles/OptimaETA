@@ -18,10 +18,11 @@ import MapKit
         }
     }
     var searchResults: [MKMapItem]
+    var selection: MKMapItem?
     var position: MapCameraPosition
     
     private let searchPublisher = PassthroughSubject<String, Never>()
-    private let searchOnMainQueue = DispatchQueue.main // DispatchQueue(label: "com.optimaeta.MapViewModel.searchQueue")
+    private let searchOnMainQueue = DispatchQueue.main
     private var searchCancellable: AnyCancellable?
     
     var isSearching: Bool { !searchString.isEmpty }
@@ -61,6 +62,7 @@ import MapKit
     
     func clearSearchString() {
         searchString = ""
+        selection = nil
     }
 }
 
