@@ -18,7 +18,7 @@ import MapKit
         }
     }
     var searchResults: [MKMapItem]
-    var selection: MKMapItem?
+    var selection: MapSelection<Int>?
     var position: MapCameraPosition
     
     private let searchPublisher = PassthroughSubject<String, Never>()
@@ -41,6 +41,11 @@ import MapKit
             .sink(receiveValue: self.syncSearch)
     }
     
+    func clearSearchString() {
+        searchString = ""
+        selection = nil
+    }
+
     func syncSearch(for query: String) {
         Task(priority: .userInitiated) {
             await self.search(for: query)
@@ -58,11 +63,6 @@ import MapKit
         let search = MKLocalSearch(request: request)
         let response = try? await search.start()
         searchResults = response?.mapItems ?? []
-    }
-    
-    func clearSearchString() {
-        searchString = ""
-        selection = nil
     }
 }
 

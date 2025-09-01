@@ -15,11 +15,13 @@ struct ContentView: View {
     var body: some View {
         Map(initialPosition: vm.position, selection: $vm.selection) {
             UserAnnotation()
-            ForEach(vm.searchResults, id: \.self) { result in
+            ForEach(Array(vm.searchResults.enumerated()), id: \.element) { (idx, result) in
                 Marker(item: result)
                     .mapItemDetailSelectionAccessory(.callout(.compact))
+                    .tag(MapSelection(idx))
             }
         }
+        .mapFeatureSelectionAccessory(.callout(.compact))
         .mapControls {
             MapUserLocationButton()
         }
