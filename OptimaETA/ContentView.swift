@@ -13,7 +13,7 @@ struct ContentView: View {
     var lm: CLLocationManager = CLLocationManager()
     
     var body: some View {
-        Map(initialPosition: vm.position, selection: $vm.selection) {
+        Map(position: $vm.position, selection: $vm.selection) {
             UserAnnotation()
             ForEach(Array(vm.searchResults.enumerated()), id: \.element) { (idx, result) in
                 Marker(item: result)
@@ -21,12 +21,18 @@ struct ContentView: View {
                     .tag(MapSelection(idx))
             }
         }
-        .mapFeatureSelectionAccessory(.callout(.compact))
+        .mapFeatureSelectionAccessory(.callout(.compact)
+        )
         .mapControls {
             MapUserLocationButton()
         }
-        .mapStyle(.standard(elevation: .realistic, showsTraffic: true))
-        .safeAreaInset(edge: .bottom, content: { SearchView(vm: vm).padding(.horizontal) })
+        .mapStyle(.standard(elevation: .realistic, showsTraffic: true)
+        )
+        .safeAreaInset(edge: .bottom) { SearchView(vm: vm).padding(.horizontal)
+        }
+        .onChange(of: vm.searchResults) { _,_ in
+            vm.position = .automatic
+        }
     }
 }
 
