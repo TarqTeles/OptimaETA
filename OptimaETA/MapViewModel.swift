@@ -6,14 +6,45 @@
 //
 
 import SwiftUI
+import Combine
 import MapKit
 
 @Observable class MapViewModel {
-    var searchString = ""
-    var searchResults: [MKMapItem] = []
-    var position: MapCameraPosition = .userLocation(fallback: .region(ATX.region))
+    var searchString: String {
+        didSet {
+            if !oldValue.isEmpty && oldValue != searchString {
+                searchPublisher.send(searchString)
+            }
+        }
+    }
+    var searchResults: [MKMapItem]
+    var position: MapCameraPosition
+    
+    private let searchPublisher = PassthroughSubject<String, Never>()
+    private let searchOnMainQueue = DispatchQueue.main // DispatchQueue(label: "com.optimaeta.MapViewModel.searchQueue")
+    private var searchCancellable: AnyCancellable?
     
     var isSearching: Bool { !searchString.isEmpty }
+    
+    init(searchString: String = "",
+         searchResults: [MKMapItem] = [],
+         position: MapCameraPosition = .userLocation(fallback: .region(ATX.region))
+    ) {
+        self.searchString = searchString
+        self.searchResults = searchResults
+        self.position = position
+        
+        searchCancellable = searchPublisher
+            .debounce(for: 0.5, scheduler: RunLoop.main)
+            .subscribe(on: searchOnMainQueue)
+            .sink(receiveValue: self.syncSearch)
+    }
+    
+    func syncSearch(for query: String) {
+        Task(priority: .userInitiated) {
+            await self.search(for: query)
+        }
+    }
     
     func search(for query: String) async {
         let request = MKLocalSearch.Request()

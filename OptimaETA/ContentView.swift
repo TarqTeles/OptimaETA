@@ -13,7 +13,9 @@ struct ContentView: View {
     
     var body: some View {
         Map(initialPosition: vm.position) {
-            
+            ForEach(vm.searchResults, id: \.self) { result in
+                Marker(item: result)
+            }
         }
         .mapStyle(.standard(elevation: .realistic, showsTraffic: true))
         .safeAreaInset(edge: .bottom, content: { SearchView(vm: vm).padding(.horizontal) })
