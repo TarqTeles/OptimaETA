@@ -18,8 +18,27 @@ import MapKit
         }
     }
     var searchResults: [MKMapItem]
-    var selection: MapSelection<Int>?
+    var selection: MapSelection<Int>? {
+        didSet {
+            if let feature = selection?.feature {
+                self.selectedMapFeature = feature
+                self.selectedMapItem = nil
+            } else if let id = selection?.value {
+                let choices = searchResults.enumerated()
+                if let pair = (choices.first(where: { $0.offset == id })), let item = pair.element as? MKMapItem {
+                    self.selectedMapItem = item
+                    self.selectedMapFeature = nil
+                }
+            } else if selection == nil {
+                self.selectedMapFeature = nil
+                self.selectedMapItem = nil
+            }
+        }
+    }
+    var selectedMapFeature: MapFeature?
+    var selectedMapItem: MKMapItem?
     var position: MapCameraPosition
+    var visibleRegion: MKCoordinateRegion?
     
     private let searchPublisher = PassthroughSubject<String, Never>()
     private let searchOnMainQueue = DispatchQueue.main
@@ -56,7 +75,9 @@ import MapKit
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         request.resultTypes = .pointOfInterest
-        if let region = position.region {
+        if let region = visibleRegion {
+            request.region = region
+        } else if let region = position.region {
             request.region = region
         }
         

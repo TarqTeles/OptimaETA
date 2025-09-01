@@ -31,7 +31,11 @@ struct ContentView: View {
         .safeAreaInset(edge: .bottom) { SearchView(vm: vm).padding(.horizontal)
         }
         .onChange(of: vm.searchResults) { _,_ in
+            vm.selection = nil
             vm.position = .automatic
+        }
+        .onMapCameraChange { context in
+            vm.visibleRegion = context.region
         }
     }
 }
