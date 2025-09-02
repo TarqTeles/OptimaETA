@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "860E2CC4-E0CB-4BB3-B7EA-E99582BA08A7",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:OptimaETA.xcodeproj",
+        "identifier" : "9627FDDD2E61FBD0006E0431",
+        "name" : "OptimaETATests"
+      }
+    }
+  ],
+  "version" : 1
+}

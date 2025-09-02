@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "BBD1F4A8-DE0A-4142-87BE-C531C9C6AB61",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:OptimaETA.xcodeproj",
+      "identifier" : "9627FDD02E61FBCF006E0431",
+      "name" : "OptimaETA"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:OptimaETA.xcodeproj",
+        "identifier" : "9627FDDD2E61FBD0006E0431",
+        "name" : "OptimaETATests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:OptimaETA.xcodeproj",
+        "identifier" : "9627FDE72E61FBD0006E0431",
+        "name" : "OptimaETAUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -48,7 +48,8 @@ import MapKit
     
     init(searchString: String = "",
          searchResults: [MKMapItem] = [],
-         position: MapCameraPosition = .userLocation(fallback: .region(ATX.region))
+         position: MapCameraPosition = .userLocation(fallback: .region(ATX.region)),
+         onSearch: ((String) -> Void)? = nil
     ) {
         self.searchString = searchString
         self.searchResults = searchResults
@@ -57,7 +58,7 @@ import MapKit
         searchCancellable = searchPublisher
             .debounce(for: 0.5, scheduler: RunLoop.main)
             .subscribe(on: searchOnMainQueue)
-            .sink(receiveValue: self.syncSearch)
+            .sink(receiveValue: onSearch ?? self.syncSearch)
     }
     
     func clearSearchString() {
@@ -85,13 +86,4 @@ import MapKit
         let response = try? await search.start()
         searchResults = response?.mapItems ?? []
     }
-}
-
-private struct ATX {
-    static let coordinate: CLLocationCoordinate2D = .init(latitude: +30.20219090, longitude: -97.66659810)
-    static let marker = MKMapItem(placemark: .init(coordinate: coordinate))
-    static let region = MKCoordinateRegion(center: coordinate,
-                                           span: .init(
-                                            latitudeDelta: 0.5,
-                                            longitudeDelta: 0.5))
 }

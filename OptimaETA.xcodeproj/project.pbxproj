@@ -27,6 +27,9 @@
 		9627FDD12E61FBCF006E0431 /* OptimaETA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OptimaETA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9627FDDE2E61FBD0006E0431 /* OptimaETATests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OptimaETATests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9627FDE82E61FBD0006E0431 /* OptimaETAUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OptimaETAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		966CDDFE2E672D1E00A34329 /* CI_OptimaETA.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CI_OptimaETA.xctestplan; path = OptimaETATests/CI_OptimaETA.xctestplan; sourceTree = "<group>"; };
+		967A141F2E672D6D00A87C3C /* Fast_OptimaETA.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Fast_OptimaETA.xctestplan; sourceTree = "<group>"; };
+		96CF86EC2E672E0C0008C6E4 /* IntegrationTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = IntegrationTestPlan.xctestplan; path = OptimaETATests/IntegrationTestPlan.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +78,9 @@
 		9627FDC82E61FBCF006E0431 = {
 			isa = PBXGroup;
 			children = (
+				96CF86EC2E672E0C0008C6E4 /* IntegrationTestPlan.xctestplan */,
+				967A141F2E672D6D00A87C3C /* Fast_OptimaETA.xctestplan */,
+				966CDDFE2E672D1E00A34329 /* CI_OptimaETA.xctestplan */,
 				9627FDD32E61FBCF006E0431 /* OptimaETA */,
 				9627FDE12E61FBD0006E0431 /* OptimaETATests */,
 				9627FDEB2E61FBD0006E0431 /* OptimaETAUITests */,

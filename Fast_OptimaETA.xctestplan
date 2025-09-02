@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "FA01C5B7-2B11-4D98-BD53-7A8DD81C76E3",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:OptimaETA.xcodeproj",
+      "identifier" : "9627FDD02E61FBCF006E0431",
+      "name" : "OptimaETA"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : {
+        "suites" : [
+          {
+            "name" : "IntegrationTests"
+          }
+        ]
+      },
+      "target" : {
+        "containerPath" : "container:OptimaETA.xcodeproj",
+        "identifier" : "9627FDDD2E61FBD0006E0431",
+        "name" : "OptimaETATests"
+      }
+    }
+  ],
+  "version" : 2
+}
