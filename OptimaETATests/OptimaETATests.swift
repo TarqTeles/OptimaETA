@@ -17,10 +17,16 @@ struct OptimaETATests {
         #expect(spy.searchText == "")
         try await Task.sleep(for: .milliseconds(200))
 
-        sut.searchString = "ATX"
+        sut.searchString = "Salt lick"
         try await Task.sleep(for: .milliseconds(600))
 
         #expect(spy.searchText == sut.searchString)
+
+        sut.clearSearchString()
+        try await Task.sleep(for: .milliseconds(600))
+        
+        #expect(spy.searchText == "")
+        #expect(sut.searchResults.isEmpty)
     }
 
     

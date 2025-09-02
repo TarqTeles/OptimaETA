@@ -18,9 +18,23 @@ struct IntegrationTests {
         let saltLicksAroundAustin = 2
         let searchString = "salt lick"
         
-        _ = await sut.search(for: searchString)
+        await sut.search(for: searchString)
         
         #expect(sut.searchResults.count == saltLicksAroundAustin)
+    }
+    
+    @Test func test_MapKit_doesNotReturnResultsOnShortSearchString() async throws {
+        let sut = MapViewModel(position: .region(ATX.region))
+        let emptySearchString = ""
+        let singleCharacterSearchString = "1"
+        
+        await sut.search(for: singleCharacterSearchString)
+        
+        #expect(sut.searchResults.count == 0)
+                
+        sut.syncSearch(for: emptySearchString)
+        
+        #expect(sut.searchResults.count == 0)
     }
     
     @Test func test_MapKit_allowsMapItemSelection() async throws {
