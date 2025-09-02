@@ -20,19 +20,7 @@ import MapKit
     var searchResults: [MKMapItem]
     var selection: MapSelection<Int>? {
         didSet {
-            if let feature = selection?.feature {
-                self.selectedMapFeature = feature
-                self.selectedMapItem = nil
-            } else if let id = selection?.value {
-                let choices = searchResults.enumerated()
-                if let pair = (choices.first(where: { $0.offset == id })), let item = pair.element as? MKMapItem {
-                    self.selectedMapItem = item
-                    self.selectedMapFeature = nil
-                }
-            } else if selection == nil {
-                self.selectedMapFeature = nil
-                self.selectedMapItem = nil
-            }
+            onSelection()
         }
     }
     var selectedMapFeature: MapFeature?
@@ -65,7 +53,7 @@ import MapKit
         searchString = ""
         selection = nil
     }
-
+    
     func syncSearch(for query: String) {
         Task(priority: .userInitiated) {
             await self.search(for: query)
@@ -87,5 +75,45 @@ import MapKit
         let search = MKLocalSearch(request: request)
         let response = try? await search.start()
         searchResults = response?.mapItems ?? []
+    }
+    
+    private func onSelection() {
+        if let feature = selection?.feature {
+            self.selectedMapFeature = feature
+            self.selectedMapItem = nil
+        } else if let id = selection?.value {
+            let choices = searchResults.enumerated()
+            if let pair = (choices.first(where: { $0.offset == id })) {
+                self.selectedMapItem = pair.element
+                self.selectedMapFeature = nil
+            }
+        } else if selection == nil {
+            self.selectedMapFeature = nil
+            self.selectedMapItem = nil
+        }
+    }
+    
+    func getDestination() -> MKMapItem? {
+        if let item = selectedMapItem {
+            return item
+        } else if let feature = selectedMapFeature {
+            return MKMapItem(placemark: .init(coordinate: feature.coordinate))
+        } else {
+            return nil
+        }
+    }
+    
+    func getRoutes() async -> [MKRoute] {
+        guard let item = getDestination() else { return [] }
+        
+        let request = MKDirections.Request()
+        request.source = .forCurrentLocation()
+        request.destination = item
+        request.requestsAlternateRoutes = true
+        request.transportType = .any
+        
+        let response = try? await MKDirections(request: request).calculate()
+        
+        return response?.routes ?? []
     }
 }
