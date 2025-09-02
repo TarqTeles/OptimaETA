@@ -27,6 +27,7 @@ import MapKit
     var selectedMapItem: MKMapItem?
     var position: MapCameraPosition
     var visibleRegion: MKCoordinateRegion?
+    var routes: [MKRoute] = []
     
     private let searchPublisher = PassthroughSubject<String, Never>()
     private let searchOnMainQueue = DispatchQueue.main
@@ -90,6 +91,9 @@ import MapKit
         } else if selection == nil {
             self.selectedMapFeature = nil
             self.selectedMapItem = nil
+        }
+        Task {
+            routes = await getRoutes()
         }
     }
     

@@ -20,6 +20,18 @@ struct ContentView: View {
                     .mapItemDetailSelectionAccessory(.callout(.compact))
                     .tag(MapSelection(idx))
             }
+            ForEach(vm.routes, id: \.self) { route in
+                MapPolyline(route.polyline)
+                    .stroke(.blue, lineWidth: 5)
+                
+                let center = midPoint(for: route)
+                Annotation("", coordinate: center, anchor: .bottom) {
+                    Text(time(for: route))
+                        .font(.callout)
+                        .foregroundStyle(.blue)
+                        .background(Capsule().fill(.thinMaterial))
+                }
+            }
         }
         .mapFeatureSelectionAccessory(.callout(.compact)
         )
@@ -38,6 +50,26 @@ struct ContentView: View {
             vm.visibleRegion = context.region
         }
     }
+        
+    func time(for route: MKRoute) -> String {
+        let timeInSeconds = route.expectedTravelTime
+        let date = Date(timeIntervalSinceNow: timeInSeconds)
+        let df = DateFormatter()
+        df.dateFormat = "mm:ss"
+        
+        return df.string(from: date)
+    }
+    
+    func midPoint(for route: MKRoute) -> CLLocationCoordinate2D {
+        let points = route.polyline.points()
+        let pointCount = route.polyline.pointCount
+        let buffer = UnsafeBufferPointer(start: points, count: pointCount)
+        let myPoints = Array(buffer)
+        let midPoint = myPoints[myPoints.count / 2]
+        
+        return midPoint.coordinate
+    }
+
 }
 
 #Preview {
