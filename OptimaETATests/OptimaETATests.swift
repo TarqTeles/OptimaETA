@@ -10,8 +10,26 @@ import Testing
 
 struct OptimaETATests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func test_automaticSearchOnStringChangeAfterDebounce() async throws {
+        let spy = SearchSpy()
+        let sut = MapViewModel(position: .region(ATX.region), onSearch: spy.onSeachTextChanged)
+        
+        #expect(spy.searchText == "")
+
+        sut.searchString = "ATX"
+        try await Task.sleep(for: .seconds(1))
+        
+        #expect(spy.searchText == "ATX")
     }
 
+    
+    // MARK: - Test Helpers
+    
+    private class SearchSpy {
+        var searchText: String = ""
+        
+        func onSeachTextChanged(_ text: String) -> Void {
+            searchText = text
+        }
+    }
 }

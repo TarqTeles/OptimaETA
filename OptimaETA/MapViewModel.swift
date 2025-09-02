@@ -12,7 +12,7 @@ import MapKit
 @Observable class MapViewModel {
     var searchString: String {
         didSet {
-            if !oldValue.isEmpty && oldValue != searchString {
+            if oldValue != searchString {
                 searchPublisher.send(searchString)
             }
         }
@@ -54,7 +54,7 @@ import MapKit
         self.searchString = searchString
         self.searchResults = searchResults
         self.position = position
-        
+                
         searchCancellable = searchPublisher
             .debounce(for: 0.5, scheduler: RunLoop.main)
             .subscribe(on: searchOnMainQueue)
@@ -73,6 +73,8 @@ import MapKit
     }
     
     func search(for query: String) async {
+        guard query.count > 1 else { return }
+        
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         request.resultTypes = .pointOfInterest
