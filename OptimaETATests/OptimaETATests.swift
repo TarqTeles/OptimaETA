@@ -12,14 +12,15 @@ struct OptimaETATests {
 
     @Test func test_automaticSearchOnStringChangeAfterDebounce() async throws {
         let spy = SearchSpy()
-        let sut = MapViewModel(position: .region(ATX.region), onSearch: spy.onSeachTextChanged)
+        let sut = MapViewModel(position: .region(ATX.region), onSearch: spy.updateText)
         
         #expect(spy.searchText == "")
+        try await Task.sleep(for: .milliseconds(200))
 
         sut.searchString = "ATX"
-        try await Task.sleep(for: .seconds(1))
-        
-        #expect(spy.searchText == "ATX")
+        try await Task.sleep(for: .milliseconds(600))
+
+        #expect(spy.searchText == sut.searchString)
     }
 
     
@@ -28,7 +29,7 @@ struct OptimaETATests {
     private class SearchSpy {
         var searchText: String = ""
         
-        func onSeachTextChanged(_ text: String) -> Void {
+        func updateText(to text: String) -> Void {
             searchText = text
         }
     }

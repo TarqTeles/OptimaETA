@@ -32,6 +32,10 @@
          <TestPlanReference
             reference = "container:OptimaETATests/IntegrationTestPlan.xctestplan">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:Fast_OptimaETA.xctestplan"
+            default = "YES">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference
