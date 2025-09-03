@@ -12,8 +12,8 @@ import MapKit
 @Observable class MapViewModel {
     var searchString: String {
         didSet {
-            if oldValue != searchString {
-                searchPublisher.send(searchString)
+            if oldValue.trimmed != searchString.trimmed {
+                searchPublisher.send(searchString.trimmed)
             }
         }
     }
@@ -120,5 +120,11 @@ import MapKit
         let response = try? await MKDirections(request: request).calculate()
         
         return response?.routes ?? []
+    }
+}
+
+extension String {
+    var trimmed: String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
