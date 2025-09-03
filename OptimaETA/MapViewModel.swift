@@ -80,6 +80,7 @@ import MapKit
     }
     
     private func onSelection() {
+        routes = []
         if let feature = selection?.feature {
             self.selectedMapFeature = feature
             self.selectedMapItem = nil
@@ -94,6 +95,7 @@ import MapKit
             self.selectedMapItem = nil
         }
         Task {
+            try? await Task.sleep(for: .milliseconds(100))
             routes = await getRoutes()
         }
     }
