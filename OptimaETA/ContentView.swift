@@ -61,13 +61,8 @@ struct ContentView: View {
     
     private func time(for route: MKRoute) -> String {
         let timeInSeconds = route.expectedTravelTime
-        let date = Date(timeIntervalSinceReferenceDate: timeInSeconds)
-        let df = DateFormatter()
-        df.timeZone = .gmt
-        df.dateFormat = .none
-        df.timeStyle = .short
         
-        return df.string(from: date)
+        return TimeIntervalFormatter.travelTime(for: timeInSeconds)
     }
     
     private func midPoint(for route: MKRoute) -> CLLocationCoordinate2D {
