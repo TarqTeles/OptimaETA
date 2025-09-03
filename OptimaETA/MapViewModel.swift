@@ -53,6 +53,7 @@ import MapKit
     func clearSearchString() {
         searchString = ""
         selection = nil
+        routes = []
     }
     
     func syncSearch(for query: String) {

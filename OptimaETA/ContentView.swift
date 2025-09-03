@@ -15,23 +15,8 @@ struct ContentView: View {
     var body: some View {
         Map(position: $vm.position, selection: $vm.selection) {
             UserAnnotation()
-            ForEach(Array(vm.searchResults.enumerated()), id: \.element) { (idx, result) in
-                Marker(item: result)
-                    .mapItemDetailSelectionAccessory(.callout(.compact))
-                    .tag(MapSelection(idx))
-            }
-            ForEach(vm.routes, id: \.self) { route in
-                MapPolyline(route.polyline)
-                    .stroke(.blue, lineWidth: 5)
-                
-                let center = midPoint(for: route)
-                Annotation("", coordinate: center, anchor: .bottom) {
-                    Text(time(for: route))
-                        .font(.callout)
-                        .foregroundStyle(.blue)
-                        .background(Capsule().fill(.thinMaterial))
-                }
-            }
+            ShowAllRetrievedMarkers()
+            ShowRoutes()
         }
         .mapFeatureSelectionAccessory(.callout(.compact)
         )
@@ -50,17 +35,42 @@ struct ContentView: View {
             vm.visibleRegion = context.region
         }
     }
-        
-    func time(for route: MKRoute) -> String {
+
+    private func ShowAllRetrievedMarkers() -> ForEach<[EnumeratedSequence<[MKMapItem]>.Element], MKMapItem, some MapContent> {
+        return ForEach(Array(vm.searchResults.enumerated()), id: \.element) { (idx, result) in
+            Marker(item: result)
+                .mapItemDetailSelectionAccessory(.callout(.compact))
+                .tag(MapSelection(idx))
+        }
+    }
+    
+    private func ShowRoutes() -> ForEach<[MKRoute], MKRoute, TupleMapContent<(some MapContent, Annotation<Text, some View>)>> {
+        return ForEach(vm.routes, id: \.self) { route in
+            MapPolyline(route.polyline)
+                .stroke(.blue, lineWidth: 5)
+            
+            let center = midPoint(for: route)
+            Annotation("", coordinate: center, anchor: .bottom) {
+                Text(time(for: route))
+                    .font(.callout)
+                    .foregroundStyle(.blue)
+                    .background(Capsule().fill(.thinMaterial))
+            }
+        }
+    }
+    
+    private func time(for route: MKRoute) -> String {
         let timeInSeconds = route.expectedTravelTime
-        let date = Date(timeIntervalSinceNow: timeInSeconds)
+        let date = Date(timeIntervalSinceReferenceDate: timeInSeconds)
         let df = DateFormatter()
-        df.dateFormat = "mm:ss"
+        df.timeZone = .gmt
+        df.dateFormat = .none
+        df.timeStyle = .short
         
         return df.string(from: date)
     }
     
-    func midPoint(for route: MKRoute) -> CLLocationCoordinate2D {
+    private func midPoint(for route: MKRoute) -> CLLocationCoordinate2D {
         let points = route.polyline.points()
         let pointCount = route.polyline.pointCount
         let buffer = UnsafeBufferPointer(start: points, count: pointCount)
