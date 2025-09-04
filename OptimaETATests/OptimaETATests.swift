@@ -54,6 +54,7 @@ struct OptimaETATests {
     @Test func test_TimeIntervalFormatter_properlyFormatsTravelTime() {
         let justFiveSeconds: TimeInterval = 5.0
         let almostAMinute: TimeInterval = 59.6
+        let almostTwoMinutes: TimeInterval = 1 * 60.0 + 39.6
         let fiveMinutesFiftySeconds: TimeInterval = 5 * 60.0 + 50.0
         let twoHoursThirtyFiveMinutes: TimeInterval = 2 * 60.0 * 60.0 + 35 * 60.0
         let OneDayAndFifteenMinutes: TimeInterval = 24 * 60.0 * 60.0 + 15 * 60.0
@@ -65,7 +66,9 @@ struct OptimaETATests {
         #expect(SUT.travelTime(for: fiveMinutesFiftySeconds) == "6m")
         #expect(SUT.travelTime(for: twoHoursThirtyFiveMinutes) == "2h 35m")
         #expect(SUT.travelTime(for: OneDayAndFifteenMinutes) == "24h 15m")
+        
         #expect(SUT.travelTime(for: OneDayAndFifteenMinutes, minutesThreshold: 20.0) == "24h")
+        #expect(SUT.travelTime(for: almostTwoMinutes, minutesThreshold: 0.0) == "1m 39s")
     }
 
     
