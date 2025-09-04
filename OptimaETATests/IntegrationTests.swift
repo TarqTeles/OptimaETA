@@ -64,15 +64,18 @@ struct IntegrationTests {
         vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
 
         vm.selection = MapSelection(1)
-        
+
+        try await Task.sleep(for: .milliseconds(200))
+
         let destination = vm.getDestination()
-        
         #expect(destination != nil)
         #expect(destination == vm.selectedMapItem)
-        
-        let routes = await vm.getRoutes()
-        
-        #expect(routes.count > 0)        
+
+        while vm.routes.isEmpty {
+            try await Task.sleep(for: .seconds(1))
+        }
+
+        #expect(vm.routes.count > 0)
     }
     
     // MARK: - Test Helpers

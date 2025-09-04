@@ -84,9 +84,11 @@ import MapKit
             self.selectedMapFeature = nil
             self.selectedMapItem = nil
         }
-        Task {
-            try? await Task.sleep(for: .milliseconds(100))
-            routes = await getRoutes()
+        if let dest = getDestination() {
+            Task {
+                try? await Task.sleep(for: .milliseconds(100))
+                routes = await maps.getRoutes(to: dest)
+            }
         }
     }
     
@@ -98,20 +100,6 @@ import MapKit
         } else {
             return nil
         }
-    }
-    
-    func getRoutes() async -> [MKRoute] {
-        guard let item = getDestination() else { return [] }
-        
-        let request = MKDirections.Request()
-        request.source = .forCurrentLocation()
-        request.destination = item
-        request.requestsAlternateRoutes = true
-        request.transportType = .any
-        
-        let response = try? await MKDirections(request: request).calculate()
-        
-        return response?.routes ?? []
     }
 }
 

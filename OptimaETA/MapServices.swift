@@ -21,5 +21,16 @@ class MapServices {
         return response?.mapItems ?? []
     }
     
+    func getRoutes(to item: MKMapItem) async -> [MKRoute] {
+        let request = MKDirections.Request()
+        request.source = .forCurrentLocation()
+        request.destination = item
+        request.requestsAlternateRoutes = true
+        request.transportType = .any
+        
+        let response = try? await MKDirections(request: request).calculate()
+        
+        return response?.routes ?? []
+    }
 
 }
