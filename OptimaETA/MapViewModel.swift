@@ -10,6 +10,7 @@ import Combine
 import MapKit
 
 @Observable class MapViewModel {
+    let maps = MapServices()
     var searchString: String {
         didSet {
             if oldValue.trimmed != searchString.trimmed {
@@ -57,26 +58,15 @@ import MapKit
     }
     
     func syncSearch(for query: String) {
-        Task(priority: .userInitiated) {
-            await self.search(for: query)
+        Task(priority: .userInitiated) { [weak self] in
+            guard let self = self else { return }
+            
+            if let region = self.visibleRegion {
+                searchResults = await self.maps.searchPlaces(for: query, in: region)
+            } else if let region = self.position.region {
+                searchResults = await self.maps.searchPlaces(for: query, in: region)
+            }
         }
-    }
-    
-    func search(for query: String) async {
-        guard query.count > 1 else { return }
-        
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = query
-        request.resultTypes = .pointOfInterest
-        if let region = visibleRegion {
-            request.region = region
-        } else if let region = position.region {
-            request.region = region
-        }
-        
-        let search = MKLocalSearch(request: request)
-        let response = try? await search.start()
-        searchResults = response?.mapItems ?? []
     }
     
     private func onSelection() {

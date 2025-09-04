@@ -30,6 +30,27 @@ struct OptimaETATests {
         #expect(sut.searchResults.isEmpty)
     }
     
+    @Test func test_MapKit_doesNotReturnResultsOnShortSearchString() async throws {
+        let spy = SearchSpy()
+        let sut = MapViewModel(position: .region(ATX.region), onSearch: spy.updateText)
+        
+        let emptySearchString = ""
+        let singleCharacterSearchString = "1"
+        
+        #expect(spy.searchText == "")
+        try await Task.sleep(for: .milliseconds(200))
+
+        sut.searchString = singleCharacterSearchString
+        try await Task.sleep(for: .milliseconds(200))
+
+        #expect(spy.searchText == "")
+        
+        sut.searchString = emptySearchString
+        try await Task.sleep(for: .milliseconds(200))
+        
+        #expect(spy.searchText == "")
+    }
+    
     @Test func test_TimeIntervalFormatter_properlyFormatsTravelTime() {
         let justFiveSeconds: TimeInterval = 5.0
         let almostAMinute: TimeInterval = 59.6

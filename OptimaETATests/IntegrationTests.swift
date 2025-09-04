@@ -13,79 +13,75 @@ import SwiftUI
 struct IntegrationTests {
     
     @Test func test_MapKit_returnsSearchResults() async throws {
-        let sut = MapViewModel(position: .region(ATX.region))
-        
+        let (sut, region, _) = makeSUT()
+
         let saltLicksAroundAustin = 2
         let searchString = "salt lick"
         
-        await sut.search(for: searchString)
+        let results = await sut.searchPlaces(for: searchString, in: region)
         
-        #expect(sut.searchResults.count == saltLicksAroundAustin)
-    }
-    
-    @Test func test_MapKit_doesNotReturnResultsOnShortSearchString() async throws {
-        let sut = MapViewModel(position: .region(ATX.region))
-        let emptySearchString = ""
-        let singleCharacterSearchString = "1"
-        
-        await sut.search(for: singleCharacterSearchString)
-        
-        #expect(sut.searchResults.count == 0)
-        
-        sut.syncSearch(for: emptySearchString)
-        
-        #expect(sut.searchResults.count == 0)
+        #expect(results.count == saltLicksAroundAustin)
     }
     
     @Test func test_MapViewModel_allowsMapItemSelection() async throws {
-        let sut = MapViewModel(position: .region(ATX.region))
-        
+        let (sut, region, vm) = makeSUT()
+
         let searchString = "salt lick"
         
-        _ = await sut.search(for: searchString)
+        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
         
-        sut.selection = MapSelection(0)
+        vm.selection = MapSelection(0)
         
-        #expect(sut.selectedMapItem != nil)
+        #expect(vm.selectedMapItem != nil)
         
-        let itemName = sut.selectedMapItem!.name!.lowercased()
+        let itemName = vm.selectedMapItem!.name!.lowercased()
         #expect(itemName.contains(searchString))
     }
     
     @Test func test_MapViewModel_returnsDestionationItem() async throws {
-        let sut = MapViewModel(position: .region(ATX.region))
+        let (sut, region, vm) = makeSUT()
         
         let searchString = "salt lick"
         
-        _ = await sut.search(for: searchString)
-        
-        var destination = sut.getDestination()
+        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
+
+        var destination = vm.getDestination()
         #expect(destination == nil)
         
-        sut.selection = MapSelection(0)
+        vm.selection = MapSelection(0)
         
-        destination = sut.getDestination()
+        destination = vm.getDestination()
         
         #expect(destination != nil)
-        #expect(destination == sut.selectedMapItem)
+        #expect(destination == vm.selectedMapItem)
     }
     
     @Test func test_MapKit_calculatesRoutesToDestionation() async throws {
-        let sut = MapViewModel(position: .region(ATX.region))
+        let (sut, region, vm) = makeSUT()
         
         let searchString = "salt lick"
         
-        _ = await sut.search(for: searchString)
+        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
+
+        vm.selection = MapSelection(1)
         
-        sut.selection = MapSelection(1)
-        
-        let destination = sut.getDestination()
+        let destination = vm.getDestination()
         
         #expect(destination != nil)
-        #expect(destination == sut.selectedMapItem)
+        #expect(destination == vm.selectedMapItem)
         
-        let routes = await sut.getRoutes()
+        let routes = await vm.getRoutes()
         
         #expect(routes.count > 0)        
+    }
+    
+    // MARK: - Test Helpers
+    
+    private func makeSUT() -> (sut: MapServices, region: MKCoordinateRegion, vm: MapViewModel) {
+        let atx = ATX.region
+        let vm = MapViewModel(position: .region(atx))
+        let sut = MapServices()
+
+        return (sut, atx, vm)
     }
 }
