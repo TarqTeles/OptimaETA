@@ -8,8 +8,8 @@
 import Foundation
 import MapKit
 
-class MapServices {
-    func searchPlaces(for query: String, in region: MKCoordinateRegion) async -> [MKMapItem] {
+enum MapServices {
+    static func searchPlaces(for query: String, in region: MKCoordinateRegion) async -> [MKMapItem] {
         guard query.count > 1 else { return [] }
         
         let request = MKLocalSearch.Request()
@@ -21,7 +21,7 @@ class MapServices {
         return response?.mapItems ?? []
     }
     
-    func getRoutes(to item: MKMapItem) async -> [MKRoute] {
+    static func getRoutes(to item: MKMapItem) async -> [MKRoute] {
         let request = MKDirections.Request()
         request.source = .forCurrentLocation()
         request.destination = item

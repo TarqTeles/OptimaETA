@@ -10,7 +10,16 @@ import Combine
 import MapKit
 
 @Observable class MapViewModel {
-    let maps = MapServices()
+    private typealias maps = MapServices
+    private let selectVM = SelectedDestinationViewModel()
+
+    private let searchPublisher = PassthroughSubject<String, Never>()
+    private let searchOnMainQueue = DispatchQueue.main
+    private var searchCancellable: AnyCancellable?
+
+    var position: MapCameraPosition
+    var visibleRegion: MKCoordinateRegion?
+
     var searchString: String {
         didSet {
             if oldValue.trimmed != searchString.trimmed {
@@ -19,22 +28,28 @@ import MapKit
         }
     }
     var searchResults: [MKMapItem]
+    var isSearching: Bool { !searchString.isEmpty }
+    
     var selection: MapSelection<Int>? {
-        didSet {
-            onSelection()
+        get {
+            selectVM.selection
+        }
+        set {
+            routes = []
+            selectVM.selection = newValue
+            if let dest = selectVM.onSelection(using: searchResults) {
+                Task {
+                    try? await Task.sleep(for: .milliseconds(100))
+                    routes = await maps.getRoutes(to: dest)
+                }
+            }
         }
     }
-    var selectedMapFeature: MapFeature?
-    var selectedMapItem: MKMapItem?
-    var position: MapCameraPosition
-    var visibleRegion: MKCoordinateRegion?
+    var selectedMapFeature: MapFeature? { selectVM.selectedMapFeature }
+    var selectedMapItem: MKMapItem? { selectVM.selectedMapItem }
+    var destination: MKMapItem? { selectVM.destination }
+
     var routes: [MKRoute] = []
-    
-    private let searchPublisher = PassthroughSubject<String, Never>()
-    private let searchOnMainQueue = DispatchQueue.main
-    private var searchCancellable: AnyCancellable?
-    
-    var isSearching: Bool { !searchString.isEmpty }
     
     init(searchString: String = "",
          searchResults: [MKMapItem] = [],
@@ -62,43 +77,10 @@ import MapKit
             guard let self = self else { return }
             
             if let region = self.visibleRegion {
-                searchResults = await self.maps.searchPlaces(for: query, in: region)
+                searchResults = await maps.searchPlaces(for: query, in: region)
             } else if let region = self.position.region {
-                searchResults = await self.maps.searchPlaces(for: query, in: region)
+                searchResults = await maps.searchPlaces(for: query, in: region)
             }
-        }
-    }
-    
-    private func onSelection() {
-        routes = []
-        if let feature = selection?.feature {
-            self.selectedMapFeature = feature
-            self.selectedMapItem = nil
-        } else if let id = selection?.value {
-            let choices = searchResults.enumerated()
-            if let pair = (choices.first(where: { $0.offset == id })) {
-                self.selectedMapItem = pair.element
-                self.selectedMapFeature = nil
-            }
-        } else if selection == nil {
-            self.selectedMapFeature = nil
-            self.selectedMapItem = nil
-        }
-        if let dest = getDestination() {
-            Task {
-                try? await Task.sleep(for: .milliseconds(100))
-                routes = await maps.getRoutes(to: dest)
-            }
-        }
-    }
-    
-    func getDestination() -> MKMapItem? {
-        if let item = selectedMapItem {
-            return item
-        } else if let feature = selectedMapFeature {
-            return MKMapItem(placemark: .init(coordinate: feature.coordinate))
-        } else {
-            return nil
         }
     }
 }

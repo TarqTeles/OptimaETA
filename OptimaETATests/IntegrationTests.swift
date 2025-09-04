@@ -11,9 +11,10 @@ import SwiftUI
 @testable import OptimaETA
 
 struct IntegrationTests {
+    private typealias sut = MapServices
     
     @Test func test_MapKit_returnsSearchResults() async throws {
-        let (sut, region, _) = makeSUT()
+        let (region, _) = makeSUT()
 
         let saltLicksAroundAustin = 2
         let searchString = "salt lick"
@@ -24,7 +25,7 @@ struct IntegrationTests {
     }
     
     @Test func test_MapViewModel_allowsMapItemSelection() async throws {
-        let (sut, region, vm) = makeSUT()
+        let (region, vm) = makeSUT()
 
         let searchString = "salt lick"
         
@@ -39,25 +40,25 @@ struct IntegrationTests {
     }
     
     @Test func test_MapViewModel_returnsDestionationItem() async throws {
-        let (sut, region, vm) = makeSUT()
+        let (region, vm) = makeSUT()
         
         let searchString = "salt lick"
         
         vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
 
-        var destination = vm.getDestination()
+        var destination = vm.destination
         #expect(destination == nil)
         
         vm.selection = MapSelection(0)
         
-        destination = vm.getDestination()
+        destination = vm.destination
         
         #expect(destination != nil)
         #expect(destination == vm.selectedMapItem)
     }
     
     @Test func test_MapKit_calculatesRoutesToDestionation() async throws {
-        let (sut, region, vm) = makeSUT()
+        let (region, vm) = makeSUT()
         
         let searchString = "salt lick"
         
@@ -67,7 +68,7 @@ struct IntegrationTests {
 
         try await Task.sleep(for: .milliseconds(200))
 
-        let destination = vm.getDestination()
+        let destination = vm.destination
         #expect(destination != nil)
         #expect(destination == vm.selectedMapItem)
 
@@ -80,11 +81,10 @@ struct IntegrationTests {
     
     // MARK: - Test Helpers
     
-    private func makeSUT() -> (sut: MapServices, region: MKCoordinateRegion, vm: MapViewModel) {
+    private func makeSUT() -> (region: MKCoordinateRegion, vm: MapViewModel) {
         let atx = ATX.region
         let vm = MapViewModel(position: .region(atx))
-        let sut = MapServices()
 
-        return (sut, atx, vm)
+        return (atx, vm)
     }
 }
