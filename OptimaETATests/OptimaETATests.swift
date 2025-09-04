@@ -35,15 +35,16 @@ struct OptimaETATests {
         let almostAMinute: TimeInterval = 59.6
         let fiveMinutesFiftySeconds: TimeInterval = 5 * 60.0 + 50.0
         let twoHoursThirtyFiveMinutes: TimeInterval = 2 * 60.0 * 60.0 + 35 * 60.0
-        let OneDayAndFiftyMinutes: TimeInterval = 24 * 60.0 * 60.0 + 50 * 60.0
+        let OneDayAndFifteenMinutes: TimeInterval = 24 * 60.0 * 60.0 + 15 * 60.0
 
         typealias SUT = TimeIntervalFormatter
         
         #expect(SUT.travelTime(for: justFiveSeconds) == "5s")
         #expect(SUT.travelTime(for: almostAMinute) == "59s")
         #expect(SUT.travelTime(for: fiveMinutesFiftySeconds) == "6m")
-        #expect(SUT.travelTime(for: twoHoursThirtyFiveMinutes) == "3h")
-        #expect(SUT.travelTime(for: OneDayAndFiftyMinutes) == "25h")
+        #expect(SUT.travelTime(for: twoHoursThirtyFiveMinutes) == "2h 35m")
+        #expect(SUT.travelTime(for: OneDayAndFifteenMinutes) == "24h 15m")
+        #expect(SUT.travelTime(for: OneDayAndFifteenMinutes, minutesThreshold: 20.0) == "24h")
     }
 
     

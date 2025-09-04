@@ -8,13 +8,15 @@
 import Foundation
 
 enum TimeIntervalFormatter {
-    static func travelTime(for timeInSeconds: TimeInterval) -> String {
+    static func travelTime(for timeInSeconds: TimeInterval, minutesThreshold: TimeInterval = 10.0) -> String {
         let df = DateComponentsFormatter()
         df.unitsStyle = .abbreviated
         df.allowedUnits = [.hour, .minute, .second]
-        df.maximumUnitCount = 1
         df.collapsesLargestUnit = true
-                
+        
+        let excessMinutes = timeInSeconds.truncatingRemainder(dividingBy: 3_600.0) / 60.0
+        df.maximumUnitCount = excessMinutes > minutesThreshold ? 2 : 1
+        
         return df.string(from: timeInSeconds) ?? "error"
 
     }
