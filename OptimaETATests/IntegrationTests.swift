@@ -39,7 +39,7 @@ struct IntegrationTests {
         #expect(itemName.contains(searchString))
     }
     
-    @Test func test_MapViewModel_returnsDestionationItem() async throws {
+    @Test func test_MapViewModel_returnsDestinationItem() async throws {
         let (region, vm) = makeSUT()
         
         let searchString = "salt lick"
@@ -57,7 +57,7 @@ struct IntegrationTests {
         #expect(destination == vm.selectedMapItem)
     }
     
-    @Test func test_MapKit_calculatesRoutesToDestionation() async throws {
+    @Test func test_MapKit_calculatesRoutesToDestination() async throws {
         let (region, vm) = makeSUT()
         
         let searchString = "salt lick"
@@ -77,6 +77,37 @@ struct IntegrationTests {
         }
 
         #expect(vm.routes.count > 0)
+    }
+    
+    @Test func test_MapKit_calculatesETAToDestination() async throws {
+        let (region, vm) = makeSUT()
+        
+        let searchString = "salt lick"
+        
+        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
+        
+        let destination = vm.searchResults[1]
+        
+        let response = try await MapServices.getETA(at: destination)
+        
+        #expect(response.destination == destination)
+        #expect(response.expectedDepartureDate < response.expectedArrivalDate)
+    }
+    
+    @Test func test_MapKit_calculatesETAToDestinationOnLaterDeparture() async throws {
+        let (region, vm) = makeSUT()
+        let inFiveMinutes = Date(timeIntervalSinceNow: 5 * 60.0)
+        
+        let searchString = "salt lick"
+        
+        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
+        
+        let destination = vm.searchResults[1]
+        
+        let response = try await MapServices.getETA(at: destination, departure: inFiveMinutes)
+        
+        #expect(response.destination == destination)
+        #expect(response.expectedDepartureDate == inFiveMinutes)
     }
     
     // MARK: - Test Helpers

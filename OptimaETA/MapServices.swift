@@ -32,5 +32,15 @@ enum MapServices {
         
         return response?.routes ?? []
     }
+    
+    static func getETA(at item: MKMapItem, departure: Date = .now) async throws -> MKDirections.ETAResponse {
+        let request = MKDirections.Request()
+        request.source = .forCurrentLocation()
+        request.destination = item
+        request.departureDate = departure
+        
+        let response = try await MKDirections(request: request).calculateETA()
 
+        return response
+    }
 }
