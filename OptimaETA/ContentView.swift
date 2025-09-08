@@ -15,8 +15,8 @@ struct ContentView: View {
     var body: some View {
         Map(position: $vm.position, selection: $vm.selection) {
             UserAnnotation()
-            ShowAllRetrievedMarkers()
-            ShowRoutes()
+            ShowAllRetrievedMarkers
+            ShowRoutes
         }
         .mapFeatureSelectionAccessory(.callout(.compact)
         )
@@ -36,16 +36,16 @@ struct ContentView: View {
         }
     }
 
-    private func ShowAllRetrievedMarkers() -> ForEach<[EnumeratedSequence<[MKMapItem]>.Element], MKMapItem, some MapContent> {
-        return ForEach(Array(vm.searchResults.enumerated()), id: \.element) { (idx, result) in
+    private var ShowAllRetrievedMarkers: some MapContent {
+        ForEach(Array(vm.searchResults.enumerated()), id: \.element) { (idx, result) in
             Marker(item: result)
                 .mapItemDetailSelectionAccessory(.callout(.compact))
                 .tag(MapSelection(idx))
         }
     }
     
-    private func ShowRoutes() -> ForEach<[MKRoute], MKRoute, TupleMapContent<(some MapContent, Annotation<Text, some View>)>> {
-        return ForEach(vm.routes, id: \.self) { route in
+    private var ShowRoutes: some MapContent {
+        ForEach(vm.routes, id: \.self) { route in
             MapPolyline(route.polyline)
                 .stroke(.blue, lineWidth: 5)
             
