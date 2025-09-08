@@ -17,7 +17,6 @@ import MapKit
     func updateRoutes(to destination: MKMapItem) {
         clearAll()
         routesQueryTask = Task {
-            try? await Task.sleep(for: .milliseconds(100))
             self.currentRoutes = await maps.getRoutes(to: destination)
         }
     }
