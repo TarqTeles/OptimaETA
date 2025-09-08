@@ -9,14 +9,15 @@ import Foundation
 import SwiftUI
 import MapKit
 
-class SelectedDestinationViewModel {
-    var selection: MapSelection<Int>?
-    var selectedMapFeature: MapFeature?
-    var selectedMapItem: MKMapItem?
+@Observable class SelectedDestinationViewModel {
+    private(set) var selection: MapSelection<Int>?
+    private(set) var selectedMapFeature: MapFeature?
+    private(set) var selectedMapItem: MKMapItem?
     var destination: MKMapItem? { getDestination() }
     
     
-    func onSelection(using searchResults: [MKMapItem]) -> MKMapItem? {
+    func setSelection(_ selection: MapSelection<Int>?, using searchResults: [MKMapItem]) -> MKMapItem? {
+        self.selection = selection
         if let feature = selection?.feature {
             self.selectedMapFeature = feature
             self.selectedMapItem = nil

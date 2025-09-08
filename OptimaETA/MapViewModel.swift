@@ -12,6 +12,7 @@ import MapKit
 @Observable class MapViewModel {
     private typealias maps = MapServices
     private let selectVM = SelectedDestinationViewModel()
+    private let routesVM = RoutesETAViewModel()
 
     private let searchPublisher = PassthroughSubject<String, Never>()
     private let searchOnMainQueue = DispatchQueue.main
@@ -35,13 +36,8 @@ import MapKit
             selectVM.selection
         }
         set {
-            routes = []
-            selectVM.selection = newValue
-            if let dest = selectVM.onSelection(using: searchResults) {
-                Task {
-                    try? await Task.sleep(for: .milliseconds(100))
-                    routes = await maps.getRoutes(to: dest)
-                }
+            if let dest = selectVM.setSelection(newValue, using: searchResults) {
+                routesVM.updateRoutes(to: dest)
             }
         }
     }
@@ -49,7 +45,7 @@ import MapKit
     var selectedMapItem: MKMapItem? { selectVM.selectedMapItem }
     var destination: MKMapItem? { selectVM.destination }
 
-    var routes: [MKRoute] = []
+    var routes: [MKRoute] { routesVM.currentRoutes }
     
     init(searchString: String = "",
          searchResults: [MKMapItem] = [],
@@ -69,7 +65,7 @@ import MapKit
     func clearSearchString() {
         searchString = ""
         selection = nil
-        routes = []
+        routesVM.clearAll()
     }
     
     func syncSearch(for query: String) {
