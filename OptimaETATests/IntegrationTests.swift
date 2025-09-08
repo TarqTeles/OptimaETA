@@ -108,6 +108,13 @@ struct IntegrationTests {
         
         #expect(response.destination == destination)
         #expect(response.expectedDepartureDate == inFiveMinutes)
+        
+        let info = ETAInformation(response)
+        
+        #expect(info.destinationName == response.destination.name!)
+        #expect(info.expectedTravelTime == response.expectedTravelTime)
+        #expect(info.expectedDepartureTime == inFiveMinutes)
+        #expect(info.arrivesBeforeOrAt(inFiveMinutes) == false)
     }
     
     // MARK: - Test Helpers
