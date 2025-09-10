@@ -13,6 +13,8 @@ import MapKit
     var currentRoutes: [MKRoute] = []
     var routesQueryTask: Task<Void, Error>?
     var etaSeries: [ETAInformation] = []
+    var fastestTravelTime: TimeInterval = .infinity
+    var earliestETA: Date = .distantFuture
 
     func updateRoutes(to destination: MKMapItem) {
         clearAll()
@@ -40,7 +42,14 @@ import MapKit
             }
             for try await result in group {
                 responses += 1
-                series[result.0] = ETAInformation(result.1)
+                let info = ETAInformation(result.1)
+                series[result.0] = info
+                if info.expectedTravelTime < fastestTravelTime {
+                    fastestTravelTime = info.expectedTravelTime
+                }
+                if info.expectedArrivalTime < earliestETA {
+                    earliestETA = info.expectedArrivalTime
+                }
             }
         }
         etaSeries = series.compactMap(\.self)
@@ -50,5 +59,7 @@ import MapKit
         routesQueryTask?.cancel()
         currentRoutes = []
         etaSeries.removeAll(keepingCapacity: true)
+        earliestETA = .distantFuture
+        fastestTravelTime = .infinity
     }
 }

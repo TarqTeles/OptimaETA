@@ -137,6 +137,12 @@ struct IntegrationTests {
         #expect(series.count == eightIntervals)
         #expect(series[0].expectedDepartureTime == start)
         #expect(series[last].expectedDepartureTime == start.addingTimeInterval(Double(last) * fiveMinutes))
+
+        let earliestETA = series.map({ $0.expectedArrivalTime }).sorted().first!
+        let fastestTravelTime = series.map({ $0.expectedTravelTime }).sorted().first!
+        
+        #expect(etaVM.earliestETA == earliestETA)
+        #expect(etaVM.fastestTravelTime == fastestTravelTime)
     }
     
 
