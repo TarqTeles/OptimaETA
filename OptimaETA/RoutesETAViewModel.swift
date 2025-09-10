@@ -11,14 +11,39 @@ import MapKit
 @Observable class RoutesETAViewModel {
     private typealias maps = MapServices
     var currentRoutes: [MKRoute] = []
-    var etaSeries: [ETAInformation] = []
     var routesQueryTask: Task<Void, Error>?
+    var etaSeries: [ETAInformation] = []
 
     func updateRoutes(to destination: MKMapItem) {
         clearAll()
         routesQueryTask = Task {
             self.currentRoutes = await maps.getRoutes(to: destination)
         }
+    }
+    
+    func updateETASeries(to destination: MKMapItem,
+                         intervals: Int = 8,
+                         lasting: TimeInterval = 5 * 60.0,
+                         starting: Date = .now
+    ) async throws {
+        var series: [ETAInformation?] = .init(repeating: nil, count: intervals)
+        var responses: Int = 0
+        try await withThrowingTaskGroup { group in
+            for i in 0..<intervals {
+                group.addTask {
+                    let delay = TimeInterval(i) * lasting
+                    let dep = starting.addingTimeInterval(delay)
+                    let response = try await MapServices.getETA(at: destination, departure: dep)
+                    return (i, response)
+                    
+                }
+            }
+            for try await result in group {
+                responses += 1
+                series[result.0] = ETAInformation(result.1)
+            }
+        }
+        etaSeries = series.compactMap(\.self)
     }
     
     func clearAll() {

@@ -116,7 +116,30 @@ struct IntegrationTests {
         #expect(info.expectedDepartureTime == inFiveMinutes)
         #expect(info.arrivesBeforeOrAt(inFiveMinutes) == false)
     }
+
+    @Test func test_RoutesETAVM_populatesETAToUseInChart() async throws {
+        let (region, vm) = makeSUT()
+        let etaVM = RoutesETAViewModel()
+        let eightIntervals = 8
+        let fiveMinutes = 5 * 60.0
+        let start = Date()
+        
+        let searchString = "salt lick"
+        
+        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
+        
+        let destination = vm.searchResults[1]
+        
+        try await etaVM.updateETASeries(to: destination, intervals: eightIntervals, lasting: fiveMinutes, starting: start)
+        
+        let series = etaVM.etaSeries
+        let last = eightIntervals - 1
+        #expect(series.count == eightIntervals)
+        #expect(series[0].expectedDepartureTime == start)
+        #expect(series[last].expectedDepartureTime == start.addingTimeInterval(Double(last) * fiveMinutes))
+    }
     
+
     // MARK: - Test Helpers
     
     private func makeSUT() -> (region: MKCoordinateRegion, vm: MapViewModel) {
