@@ -8,14 +8,18 @@
 import Foundation
 import MapKit
 
-struct ETAInformation {
+struct ETAInformation: Identifiable {
+    let id: UUID
+    let label: String
     let destinationName: String
     let expectedTravelTime: TimeInterval
     let distance: Measurement<UnitLength>
     let expectedDepartureTime: Date
     let expectedArrivalTime: Date
     
-    init(_ response: MKDirections.ETAResponse, locale: Locale = .current) {
+    init(_ response: MKDirections.ETAResponse, label: String, locale: Locale = .current) {
+        self.id = UUID()
+        self.label = label
         self.destinationName = response.destination.name ?? response.destination.description
         self.expectedTravelTime = response.expectedTravelTime
         self.distance = Measurement(value: response.distance, unit: .init(forLocale: locale))

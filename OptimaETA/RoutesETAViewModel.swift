@@ -24,7 +24,7 @@ import MapKit
     }
     
     func updateETASeries(to destination: MKMapItem,
-                         intervals: Int = 8,
+                         intervals: Int = 12,
                          lasting: TimeInterval = 5 * 60.0,
                          starting: Date = .now
     ) async throws {
@@ -42,7 +42,8 @@ import MapKit
             }
             for try await result in group {
                 responses += 1
-                let info = ETAInformation(result.1)
+                let myLabel = result.0 == 0 ? "Now" : TimeIntervalFormatter.travelTime(for: Double(result.0) * lasting)
+                let info = ETAInformation(result.1, label: myLabel)
                 series[result.0] = info
                 if info.expectedTravelTime < fastestTravelTime {
                     fastestTravelTime = info.expectedTravelTime

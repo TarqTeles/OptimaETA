@@ -109,7 +109,7 @@ struct IntegrationTests {
         #expect(response.destination == destination)
         #expect(response.expectedDepartureDate == inFiveMinutes)
         
-        let info = ETAInformation(response)
+        let info = ETAInformation(response, label: "my info")
         
         #expect(info.destinationName == response.destination.name!)
         #expect(info.expectedTravelTime == response.expectedTravelTime)

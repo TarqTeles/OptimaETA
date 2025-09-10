@@ -11,18 +11,21 @@ import MapKit
 struct ContentView: View {
     @Bindable var vm: MapViewModel
     var lm: CLLocationManager = CLLocationManager()
+        
+    @State var showChart: Bool = false
     
     var body: some View {
-        Map(position: $vm.position, selection: $vm.selection) {
-            UserAnnotation()
-            ShowAllRetrievedMarkers
-            ShowRoutes
+        ZStack(alignment: .bottomTrailing) {
+            Map(position: $vm.position, selection: $vm.selection) {
+                UserAnnotation()
+                ShowAllRetrievedMarkers
+                ShowRoutes
+            }
+            
+            Overlay
         }
         .mapFeatureSelectionAccessory(.callout(.compact)
         )
-        .mapControls {
-            MapUserLocationButton()
-        }
         .mapStyle(.standard(elevation: .realistic, showsTraffic: true)
         )
         .safeAreaInset(edge: .bottom) { SearchView(vm: vm).padding(.horizontal)
@@ -34,6 +37,7 @@ struct ContentView: View {
         .onMapCameraChange { context in
             vm.visibleRegion = context.region
         }
+        .sheet(isPresented: $showChart, content: { ETAChartView(vm: vm, isShowing: $showChart) })
     }
 
     private var ShowAllRetrievedMarkers: some MapContent {
@@ -42,6 +46,26 @@ struct ContentView: View {
                 .mapItemDetailSelectionAccessory(.callout(.compact))
                 .tag(MapSelection(idx))
         }
+    }
+    
+    private var Overlay: some View {
+        VStack {
+            if vm.selection != nil {
+                Button(action: {
+                    showChart.toggle()
+                },
+                       label: {
+                    Text("ETA")
+                        .fontWeight(.bold)
+                        .foregroundStyle(.primary.blendMode(.difference))
+                        .padding()
+                        .background(in: Circle())
+                })
+            } else {
+                EmptyView()
+            }
+        }
+        .padding()
     }
     
     private var ShowRoutes: some MapContent {
@@ -58,7 +82,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func time(for route: MKRoute) -> String {
         let timeInSeconds = route.expectedTravelTime
         
@@ -74,7 +98,6 @@ struct ContentView: View {
         
         return midPoint.coordinate
     }
-
 }
 
 #Preview {

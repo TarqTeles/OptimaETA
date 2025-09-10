@@ -46,6 +46,9 @@ import MapKit
     var destination: MKMapItem? { selectVM.destination }
 
     var routes: [MKRoute] { routesVM.currentRoutes }
+    var etaSeries: [ETAInformation] { routesVM.etaSeries }
+    var fastestTravelTime: TimeInterval { routesVM.fastestTravelTime }
+    var earliestETA: Date { routesVM.earliestETA }
     
     init(searchString: String = "",
          searchResults: [MKMapItem] = [],
@@ -77,6 +80,12 @@ import MapKit
             } else if let region = self.position.region {
                 searchResults = await maps.searchPlaces(for: query, in: region)
             }
+        }
+    }
+    
+    func getETAs() async {
+        if let dest = destination {
+            try? await routesVM.updateETASeries(to: dest)
         }
     }
 }
