@@ -61,6 +61,7 @@ import MapKit
                 
         searchCancellable = searchPublisher
             .debounce(for: 0.5, scheduler: RunLoop.main)
+            .removeDuplicates()
             .subscribe(on: searchOnMainQueue)
             .sink(receiveValue: onSearch ?? self.syncSearch)
     }
