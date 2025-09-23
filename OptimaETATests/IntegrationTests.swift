@@ -13,6 +13,24 @@ import SwiftUI
 struct IntegrationTests {
     private typealias sut = MapServices
     
+    @Test func test_Sample_writesAssetsToDiskAndReadsBack() async throws {
+        let fileName = "test"
+        let sample = Sample()
+        
+        let (region, _) = makeSUT()
+        
+        let saltLicksAroundAustin = 2
+        let searchString = "salt lick"
+        
+        let results = await sut.searchPlaces(for: searchString, in: region)
+
+        try sample.record(results, toFile: fileName)
+        
+        let recorded = try sample.retrieve(fromFile: fileName)
+        
+        #expect(recorded == results)
+    }
+    
     @Test func test_MapKit_returnsSearchResults() async throws {
         let (region, _) = makeSUT()
 
