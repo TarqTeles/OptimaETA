@@ -19,14 +19,13 @@ struct IntegrationTests {
         
         let (region, _) = makeSUT()
         
-        let saltLicksAroundAustin = 2
         let searchString = "salt lick"
         
         let results = await sut.searchPlaces(for: searchString, in: region)
 
         try sample.record(results, toFile: fileName)
         
-        let recorded = try sample.retrieve(fromFile: fileName)
+        let recorded: [MKMapItem]? = try sample.retrieve(fromFile: fileName)
         
         #expect(recorded == results)
     }

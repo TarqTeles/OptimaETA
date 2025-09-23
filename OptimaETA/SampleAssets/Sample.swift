@@ -12,20 +12,18 @@ struct Sample {
     let baseURL = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()
     
-    func record(_ payload: [MKMapItem], toFile name: String) throws {
+    func record<T: NSObject>(_ payload: [T], toFile name: String) throws {
         let data = try NSKeyedArchiver.archivedData(withRootObject: payload, requiringSecureCoding: true)
         let url = baseURL.appendingPathComponent(name)
         
         try data.write(to: url)
     }
     
-    func retrieve(fromFile name: String) throws -> [MKMapItem]? {
+    func retrieve<T: NSObject>(fromFile name: String) throws -> [T]? {
         let url = baseURL.appendingPathComponent(name)
         let data = try Data(contentsOf: url)
         
-        let obj = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClasses: [MKMapItem.self], from: data)
-        
-        return obj as? [MKMapItem]
+        return try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClasses: [MKMapItem.self], from: data) as? [T]
     }
 }
 
