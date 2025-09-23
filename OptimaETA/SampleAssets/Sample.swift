@@ -12,14 +12,14 @@ struct Sample {
     let baseURL = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()
     
-    func record<T: NSObject>(_ payload: [T], toFile name: String) throws {
+    func record<T: NSSecureCoding>(_ payload: [T], toFile name: String) throws {
         let data = try NSKeyedArchiver.archivedData(withRootObject: payload, requiringSecureCoding: true)
         let url = baseURL.appendingPathComponent(name)
         
         try data.write(to: url)
     }
     
-    func retrieve<T: NSObject>(fromFile name: String) throws -> [T]? {
+    func retrieve<T: NSSecureCoding>(fromFile name: String) throws -> [T]? {
         let url = baseURL.appendingPathComponent(name)
         let data = try Data(contentsOf: url)
         
