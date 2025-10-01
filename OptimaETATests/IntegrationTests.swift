@@ -160,6 +160,13 @@ struct IntegrationTests {
         
         #expect(etaVM.earliestETA == earliestETA)
         #expect(etaVM.fastestTravelTime == fastestTravelTime)
+        
+        let sampleToFile = Sample()
+        let etaFile = "etas.json"
+        try sampleToFile.record(series, toFile: etaFile)
+        let savedSeries: [ETAInformation] = try sampleToFile.retrieve(fromFile: etaFile)
+        
+        #expect(series == savedSeries)
     }
     
 

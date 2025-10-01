@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-struct ETAInformation: Identifiable {
+struct ETAInformation: Codable, Identifiable, Equatable {
     let id: UUID
     let label: String
     let destinationName: String
@@ -29,5 +29,9 @@ struct ETAInformation: Identifiable {
     
     func arrivesBeforeOrAt(_ date: Date) -> Bool {
         return expectedArrivalTime <= date
+    }
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id
     }
 }

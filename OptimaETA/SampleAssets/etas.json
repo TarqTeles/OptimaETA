@@ -1,0 +1,146 @@
+[
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T21:48:35Z",
+    "expectedDepartureTime" : "2025-10-01T21:00:22Z",
+    "expectedTravelTime" : 2893,
+    "id" : "313216A1-DEB0-4E9C-91C1-727F70E6CB97",
+    "label" : "Now"
+  },
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T21:55:55Z",
+    "expectedDepartureTime" : "2025-10-01T21:05:22Z",
+    "expectedTravelTime" : 3033,
+    "id" : "C3C28151-8CFE-4035-9569-849FCBEFDD2A",
+    "label" : "5m"
+  },
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T22:01:26Z",
+    "expectedDepartureTime" : "2025-10-01T21:10:22Z",
+    "expectedTravelTime" : 3064,
+    "id" : "D600C6DA-96CD-42FA-AFB4-8E56DCBC3BCE",
+    "label" : "10m"
+  },
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T22:06:08Z",
+    "expectedDepartureTime" : "2025-10-01T21:15:22Z",
+    "expectedTravelTime" : 3046,
+    "id" : "57F75BAA-7BEC-4051-A6CA-AA7BCADEFA1D",
+    "label" : "15m"
+  },
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T22:10:52Z",
+    "expectedDepartureTime" : "2025-10-01T21:20:22Z",
+    "expectedTravelTime" : 3030,
+    "id" : "1822F175-B887-4354-93E1-ECB75C8446E5",
+    "label" : "20m"
+  },
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T22:15:39Z",
+    "expectedDepartureTime" : "2025-10-01T21:25:22Z",
+    "expectedTravelTime" : 3017,
+    "id" : "E7A8D0DB-8297-4706-88DD-4CEE32FE06D9",
+    "label" : "25m"
+  },
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T22:20:05Z",
+    "expectedDepartureTime" : "2025-10-01T21:30:22Z",
+    "expectedTravelTime" : 2983,
+    "id" : "6F362858-934A-4D79-95A7-6BF0889554AA",
+    "label" : "30m"
+  },
+  {
+    "destinationName" : "The Salt Lick BBQ",
+    "distance" : {
+      "unit" : {
+        "converter" : {
+          "coefficient" : 1,
+          "constant" : 0
+        },
+        "symbol" : "m"
+      },
+      "value" : 44189
+    },
+    "expectedArrivalTime" : "2025-10-01T22:24:26Z",
+    "expectedDepartureTime" : "2025-10-01T21:35:22Z",
+    "expectedTravelTime" : 2944,
+    "id" : "8C3BA04B-259F-4130-9A1E-3760CBA55955",
+    "label" : "35m"
+  }
+]
