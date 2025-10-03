@@ -41,39 +41,6 @@ struct IntegrationTests {
         #expect(results.count == saltLicksAroundAustin)
     }
     
-    @Test func test_MapViewModel_allowsMapItemSelection() async throws {
-        let (region, vm) = makeSUT()
-
-        let searchString = "salt lick"
-        
-        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
-        
-        vm.selection = MapSelection(0)
-        
-        #expect(vm.selectedMapItem != nil)
-        
-        let itemName = vm.selectedMapItem!.name!.lowercased()
-        #expect(itemName.contains(searchString))
-    }
-    
-    @Test func test_MapViewModel_returnsDestinationItem() async throws {
-        let (region, vm) = makeSUT()
-        
-        let searchString = "salt lick"
-        
-        vm.searchResults = await sut.searchPlaces(for: searchString, in: region)
-
-        var destination = vm.destination
-        #expect(destination == nil)
-        
-        vm.selection = MapSelection(0)
-        
-        destination = vm.destination
-        
-        #expect(destination != nil)
-        #expect(destination == vm.selectedMapItem)
-    }
-    
     @Test func test_MapKit_calculatesRoutesToDestination() async throws {
         let (region, vm) = makeSUT()
         

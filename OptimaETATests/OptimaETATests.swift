@@ -6,8 +6,10 @@
 //
 
 import Testing
-@testable import OptimaETA
 import Foundation
+import MapKit
+import SwiftUI
+@testable import OptimaETA
 
 struct OptimaETATests {
 
@@ -51,6 +53,35 @@ struct OptimaETATests {
         #expect(spy.searchText == "")
     }
     
+    @Test func test_MapViewModel_allowsMapItemSelection() async throws {
+        let stubbedResults: [MKMapItem] = try Sample().retrieve(fromFile: "test")!
+        let vm = MapViewModel(searchResults: stubbedResults, onSearch: { _ in })
+        
+        let pick = 0
+        vm.selection = MapSelection(pick)
+        
+        #expect(vm.selectedMapItem != nil)
+        
+        let originalPick = stubbedResults[pick]
+        let selectedItem = vm.selectedMapItem!
+        #expect(selectedItem == originalPick)
+    }
+    
+    @Test func test_MapViewModel_returnsDestinationItem() async throws {
+        let stubbedResults: [MKMapItem] = try Sample().retrieve(fromFile: "test")!
+        let vm = MapViewModel(searchResults: stubbedResults, onSearch: { _ in })
+        
+        var destination = vm.destination
+        #expect(destination == nil)
+        
+        vm.selection = MapSelection(0)
+        
+        destination = vm.destination
+        
+        #expect(destination != nil)
+        #expect(destination == vm.selectedMapItem)
+    }
+
     @Test func test_TimeIntervalFormatter_properlyFormatsTravelTime() {
         let justFiveSeconds: TimeInterval = 5.0
         let almostAMinute: TimeInterval = 59.6
